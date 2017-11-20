@@ -1,0 +1,40 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "globals": {
+        "$": false,
+        "window": false,
+        "document": false,
+        "angular": false,
+        "jQuery": false
+    },
+    "rules": {
+        "no-const-assign": "warn",
+        "no-this-before-super": "warn",
+        "no-undef": "warn",
+        "no-unreachable": "warn",
+        "no-unused-vars": "warn",
+        "constructor-super": "warn",
+        "valid-typeof": "warn",
+        "quotes": [
+            "warn",
+            "single"
+        ],
+        "no-console": "off",
+        "strict": [
+            "error",
+            "global"
+        ],
+        "semi": "error"
+    }
+}

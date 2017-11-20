@@ -1,0 +1,23 @@
+{
+  "name": "go4restful",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heekei/go4restful.git"
+  },
+  "keywords": [
+    "restful",
+    "nodejs"
+  ],
+  "author": "heekei",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heekei/go4restful/issues"
+  },
+  "homepage": "https://github.com/heekei/go4restful#readme"
+}
