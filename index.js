@@ -1,5 +1,4 @@
-'use strict';
-var http = require('http'),
+const http = require('http'),
     router = require('./router');
 http.createServer(function (req, res) {
     // var url = parse(req.url);
@@ -7,4 +6,4 @@ http.createServer(function (req, res) {
     //     'Content-Type': 'text/plain'
     // });
     router(req, res);
-}).listen(80);
+}).listen(8080);

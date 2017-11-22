@@ -1,26 +1,34 @@
 const parse = require('url').parse,
     fs = require('fs'),
-    path = require('path'),
-    config = require('./config');
-var root = path.resolve(config.director);
-
+    PATH = require('path'),
+    config = require('./config'),
+    RESTful = require('./RESTful');
+var root = PATH.resolve(config.directory);
+/**
+ * 
+ * 
+ * @param {IncomingMessage} req 
+ * @param {ServerResponse} res 
+ */
 function router(req, res) {
     const url = parse(req.url);
     var pathname = decodeURI(url.pathname); //防止中文乱码
-    if (path.extname(pathname) === '') { //设置index.html为缺省页
-        pathname += '/index.html';
-    }
-    if (pathname.indexOf('/blog') === 0) { //将blog目录下的文件定向到root目录下
-        pathname = pathname.substr(5, pathname.length - 4);
-    }
     if (pathname.indexOf('/api') === 0) { // 进入RESTful 
-        res.writeHead(200, {
-            'Content-Type': 'text/plain;charset=utf-8'
-        });
-        res.end('进入RESTful');
-    } else { // 前端
+        RESTful(req, res);
+    } else { // 静态资源
+
+        //设置index.html为缺省页
+        if (PATH.extname(pathname) === '') {
+            pathname += '/index.html';
+        }
+
+        //将blog目录下的文件定向到root目录下
+        if (pathname.indexOf('/blog') === 0) {
+            pathname = pathname.substr(5, pathname.length - 4);
+        }
+
         // 获得对应的本地文件路径，类似 '/srv/www/css/bootstrap.css':
-        var filepath = path.join(root, pathname);
+        var filepath = PATH.join(root, pathname);
         // 获取文件状态:
         fs.stat(filepath, function (err, stats) {
             if (!err && stats.isFile()) {
