@@ -36,11 +36,11 @@ function insertData(db, table, data, callback) {
         data.id = result.value.sequence_value;
         collection.insert(data, function (err, result) {
             db.close();
-            if (err) {
-                callback(err);
-                return;
-            }
-            callback(null, result);
+            // if (err) {
+            //     callback(err);
+            //     return;
+            // }
+            callback(err, result);
         });
     });
 };
@@ -55,13 +55,15 @@ function insertData(db, table, data, callback) {
  */
 function queryData(db, table, data, callback) {
     var collection = db.collection(table);
-    collection.find(data).toArray(function (err, result) {
+    collection.find(data, {
+        '_id': 0
+    }).toArray(function (err, result) {
         db.close();
-        if (err) {
-            callback(err);
-            return;
-        }
-        callback(null, result);
+        // if (err) {
+        //     callback(err);
+        //     return;
+        // }
+        callback(err, result);
     });
 }
 
@@ -78,11 +80,36 @@ function deleteData(db, table, data, callback) {
     var collection = db.collection(table);
     collection.remove(data, function (err, result) {
         db.close();
-        if (err) {
-            callback(err);
-            return;
-        }
-        callback(null, result);
+        // if (err) {
+        //     callback(err);
+        //     return;
+        // }
+        callback(err, result);
+    });
+}
+/**
+ * 更新数据
+ * 
+ * @param {any} db 数据库
+ * @param {any} table 表名
+ * @param {any} data 参数
+ * @param {any} callback 回调
+ */
+function updateData(db, table, data, callback) {
+    var collection = db.collection(table);
+    var whereStr = {};
+    if (data.id) whereStr.id = data.id;
+    delete data.id; //删除参数中的id
+    var updateStr = {
+        $set: data
+    };
+    collection.update(whereStr, updateStr, function (err, result) {
+        db.close();
+        // if (err) {
+        //     callback(err);
+        //     return;
+        // }
+        callback(err, result);
     });
 }
 
@@ -104,7 +131,7 @@ function OperationDatabase(table, method, data, callback) {
                 insertData(db, table, data, callback);
                 break;
             case 'POST':
-
+                updateData(db, table, data, callback);
                 break;
             case 'DELETE':
                 deleteData(db, table, data, callback);

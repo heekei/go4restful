@@ -1,7 +1,7 @@
 const parse = require('url').parse,
     IncomingMessage = require('http').IncomingMessage,
     ServerResponse = require('http').ServerResponse,
-    common = require('./common');
+    PublicMethod = require('./PublicMethod');
 /**
  * RESTful
  * 
@@ -20,12 +20,10 @@ function RESTful(req, res) {
             resourceModule(req, res);
         } catch (error) {
             console.log(error);
-            common.APINotFound(res);
+            PublicMethod.badRequest(res, error);
         }
     } else {
-        // var msg = new Msg('未找到资源！', false);
-        // res.end(msg.toJSONString());
-        common.APINotFound(res);
+        PublicMethod.APINotFound(res);
     }
 }
 module.exports = RESTful;

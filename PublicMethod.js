@@ -18,12 +18,27 @@ function APINotFound(response) {
  * 输出403
  * 
  * @param {ServerResponse} response 
+ * @param {String} message 自定义消息
  */
 function forbidden(response, message) {
     response.writeHead(403, {
         'Content-Type': 'text/plain;charset=utf-8'
     });
     var msg = new Msg(message || '无权限进行操作', false);
+    response.end(msg.toString());
+}
+
+/**
+ * 输出400
+ * 
+ * @param {ServerResponse} response 
+ * @param {String} message 自定义消息
+ */
+function badRequest(response, message) {
+    response.writeHead(400, {
+        'Content-Type': 'text/plain;charset=utf-8'
+    });
+    var msg = new Msg(message || '参数错误', false);
     response.end(msg.toString());
 }
 
@@ -45,5 +60,6 @@ function resolveData(data) {
 module.exports = {
     APINotFound: APINotFound,
     resolveData: resolveData,
-    forbidden: forbidden
+    forbidden: forbidden,
+    badRequest: badRequest
 };

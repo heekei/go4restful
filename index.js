@@ -6,4 +6,4 @@ http.createServer(function (req, res) {
     //     'Content-Type': 'text/plain'
     // });
     router(req, res);
-}).listen(8080);
+}).listen(80);

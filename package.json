@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/heekei/go4restful/issues"
   },
-  "homepage": "https://github.com/heekei/go4restful#readme"
+  "homepage": "https://github.com/heekei/go4restful#readme",
+  "dependencies": {
+    "mongodb": "^2.2.33"
+  }
 }
