@@ -16,6 +16,7 @@ function Article(req, res) {
         'Content-Type': 'text/plain;charset=utf-8'
     });
     var url = parse(req.url);
+    if (url.query) var Pager = PublicMethod.resolveData(url.query);
     var id = parseInt(url.pathname.split('/')[3]); //获取传入的文章ID
     switch (req.method) {
         case 'GET':
@@ -24,7 +25,7 @@ function Article(req, res) {
             } : {}, function (err, result) {
                 var msg = new Msg(err || result, !err);
                 res.end(msg.toString());
-            });
+            }, Pager);
             break;
         default:
             req.on('data', function (data) {

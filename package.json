@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/heekei/go4restful#readme",
   "dependencies": {
-    "mongodb": "^2.2.33"
+    "mongodb": "^2.2.33",
+    "promise": "^8.0.1"
   }
 }

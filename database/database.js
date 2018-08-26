@@ -1,5 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var DB_CONN_STR = 'mongodb://localhost:27017/local'; // 数据库为 runoob
+var Promise = require('promise');
 /**
  * 自增索引
  * 
@@ -34,6 +35,7 @@ function insertData(db, table, data, callback) {
     var collection = db.collection(table);
     getNextSequenceValue(db, table).then(function (result) {
         data.id = result.value.sequence_value;
+        data.crtime = new Date().valueOf();
         collection.insert(data, function (err, result) {
             db.close();
             // if (err) {
@@ -53,17 +55,38 @@ function insertData(db, table, data, callback) {
  * @param {any} data 参数
  * @param {any} callback 回调
  */
-function queryData(db, table, data, callback) {
+function queryData(db, table, data, callback, queryHash) {
     var collection = db.collection(table);
-    collection.find(data, {
+    var countPromise = new Promise(function (resolve, reject) {
+        collection.count(function (err, data) {
+            console.log('data: ', data);
+            resolve(data);
+        });
+    });
+
+    var dbRes = collection.find(data, {
         '_id': 0
-    }).toArray(function (err, result) {
+    }).sort({
+        id: -1
+    });
+    if (queryHash) dbRes.limit(+queryHash.pagesize).skip(((+queryHash.page) - 1) * (+queryHash.pagesize));
+    dbRes.toArray(function (err, result) {
         db.close();
-        // if (err) {
-        //     callback(err);
-        //     return;
-        // }
-        callback(err, result);
+        countPromise.then(function (cData) {
+            if (queryHash) {
+                result = {
+                    pager: {
+                        page: +queryHash.page,
+                        pagesize: +queryHash.pagesize,
+                        total_count: cData,
+                        count: result.length,
+                        pagecount: Math.ceil(cData / +queryHash.pagesize)
+                    },
+                    data: result
+                };
+            }
+            callback(err, result);
+        });
     });
 }
 
@@ -100,6 +123,7 @@ function updateData(db, table, data, callback) {
     var whereStr = {};
     if (data.id) whereStr.id = data.id;
     delete data.id; //删除参数中的id
+    data.lastmodify = new Date().valueOf();
     var updateStr = {
         $set: data
     };
@@ -121,11 +145,11 @@ function updateData(db, table, data, callback) {
  * @param {{}} data 参数/数据
  * @param {Function} callback 回调
  */
-function OperationDatabase(table, method, data, callback) {
+function OperationDatabase(table, method, data, callback, options) {
     MongoClient.connect(DB_CONN_STR, function (err, db) {
         switch (method) {
             case 'GET':
-                queryData(db, table, data, callback);
+                queryData(db, table, data, callback, options);
                 break;
             case 'PUT':
                 insertData(db, table, data, callback);
